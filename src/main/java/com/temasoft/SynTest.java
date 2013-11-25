@@ -1,5 +1,6 @@
 package com.temasoft;
 
+import com.temasoft.model.Synonym;
 import com.temasoft.model.Word;
 
 import java.io.BufferedReader;
@@ -16,14 +17,14 @@ public class SynTest {
     public static void main(String[] args) throws IOException {
 //        String wordForFind = "наполнять";
         long timeStart = System.currentTimeMillis();
-        HashMap<Word, Set<Word>> synonymVocabulary;
+        HashMap<Synonym, Set<Synonym>> synonymVocabulary;
 //        synonyms = getSimilarWordsWithSynonyms(wordForFind);
         synonymVocabulary = generateWocabulary();
         System.out.println(System.currentTimeMillis() - timeStart);
     }
 
-    private static HashMap<Word, Set<Word>> generateWocabulary() throws IOException {
-        HashMap<Word, Set<Word>> synonyms = new HashMap<Word, Set<Word>>();
+    private static HashMap<Synonym, Set<Synonym>> generateWocabulary() throws IOException {
+        HashMap<Synonym, Set<Synonym>> synonyms = new HashMap<Synonym, Set<Synonym>>();
         BufferedReader reader = new BufferedReader(new FileReader("synonyms.txt"));
         String line;
         int i = 0;
@@ -32,7 +33,7 @@ public class SynTest {
             line = pProst.matcher(line).replaceAll("");
             line = pProb.matcher(line).replaceAll("\\ ");//проверка пробелов
             String word = line.split("#")[0];
-            synonyms.put(new Word(word),getSynonymsForWord(word));
+            synonyms.put(new Synonym(word),getSynonymsForWord(word));
             i++;
             if(i == 1000) {
                 System.out.print("1000 words counted!");
@@ -85,23 +86,23 @@ public class SynTest {
         return synonyms;
     }
 
-    private static HashMap<Word, Set<Word>> getSimilarWordsWithSynonyms(String wordForFind) throws IOException {
-        HashMap<Word, Set<Word>> synonyms = new HashMap<Word, Set<Word>>();
+    private static HashMap<Synonym, Set<Synonym>> getSimilarWordsWithSynonyms(String wordForFind) throws IOException {
+        HashMap<Synonym, Set<Synonym>> synonyms = new HashMap<Synonym, Set<Synonym>>();
         BufferedReader reader = new BufferedReader(new FileReader("synonyms.txt"));
         String line;
         while((line = reader.readLine()) != null) {
             line = pProb.matcher(line).replaceAll("\\ ");//проверка пробелов
             String[] chunks = line.split("#");
             if(chunks[0].contains(wordForFind)) {
-                synonyms.put(new Word(chunks[0]), getSynonymsForWord(chunks[0]));
+                synonyms.put(new Synonym(chunks[0]), getSynonymsForWord(chunks[0]));
             }
 
         }
         reader.close();
         return synonyms;
     }
-    private static Set<Word> getSynonymsForWord(String wordForFind) throws IOException {
-        Set<Word> foundWords = new HashSet<Word>();
+    public static Set<Synonym> getSynonymsForWord(String wordForFind) throws IOException {
+        Set<Synonym> foundWords = new HashSet<Synonym>();
         BufferedReader reader = new BufferedReader(new FileReader("synonyms.txt"));
         String line;
         String[] synonyms ;
@@ -132,19 +133,19 @@ public class SynTest {
         return foundWords;
     }
 
-    private static Set<Word> parseSynonyms(String synonyms) {
-        Set<Word> buffer = new HashSet<Word>();
+    private static Set<Synonym> parseSynonyms(String synonyms) {
+        Set<Synonym> buffer = new HashSet<Synonym>();
         for(String syn : synonyms.split(",")) {
-            if(!syn.isEmpty()) buffer.add(new Word(syn.trim()));
+            if(!syn.isEmpty()) buffer.add(new Synonym(syn.trim()));
         }
         return buffer;
     }
 
-    private static Set<Word> discoverLinks(String chunk) throws IOException {
-        Set<Word> buffer = new HashSet<Word>();
+    private static Set<Synonym> discoverLinks(String chunk) throws IOException {
+        Set<Synonym> buffer = new HashSet<Synonym>();
         String[] words = chunk.split(",");
         for(String word : words) {
-            buffer.add(new Word(word));
+            buffer.add(new Synonym(word));
             buffer.addAll(getSynonymsForWord(word.trim()));
         }
         return buffer;

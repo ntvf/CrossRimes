@@ -27,7 +27,18 @@ public class MysqlTest {
 
         ApplicationContext context = new ClassPathXmlApplicationContext("app-context.xml");
         WordDAO dao = context.getBean("wordService", JPAWordDAO.class);
+        dao.saveAll(getWords());
 
+
+
+
+
+//        statement.close();
+//        conn.close();
+
+    }
+
+    public static Collection<Word> getWords() throws IOException {
         BufferedReader reader = new BufferedReader(new FileReader("dictionary2.txt"));
 
         //WordDAO dao = testDaoSql();
@@ -43,24 +54,15 @@ public class MysqlTest {
             if(Character.isUpperCase(line.charAt(0))) continue;
 
 
-              words.add(new Word(line));
+            words.add(new Word(line));
 //            statement.setString(1,line);
 //            statement.execute();
 
 //            System.out.println(builder.toString());
         }
         reader.close();
-        dao.saveAll(words);
-        System.out.println(words.size());
-
-
-
-//        statement.close();
-//        conn.close();
-
+        return words;
     }
-
-
 
 
 }

@@ -1,8 +1,14 @@
 package com.temasoft;
 
+import com.temasoft.model.Meaning;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 /**
@@ -21,17 +27,19 @@ public class Minning {
 
     }
 
-    private static String getMinnings(String word) throws IOException {
+    public static Set<Meaning> getMinnings(String word) throws IOException {
+        Set<Meaning> meanings = new HashSet<Meaning>();
         BufferedReader reader = new BufferedReader(new FileReader("OZHEGOV.TXT"));
         String line;
         while((line = reader.readLine()) != null) {
             //убираем лишние слова Primo Non-st  Anti  Regio  Obs  Admin Deprec  Arch. Pejor  z - з Maxime
             String[] chunks = line.split("\\|");
+
             if(chunks[0].equals(word)) {
-                System.out.println(tech.matcher(chunks[5]).replaceAll(""));
+                meanings.add(new Meaning(tech.matcher(chunks[5]).replaceAll("")));
             }
         }
         reader.close();
-        return null;
+        return meanings;
     }
 }

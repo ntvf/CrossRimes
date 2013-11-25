@@ -1,7 +1,11 @@
 package com.temasoft.model;
 
 
+import com.temasoft.Minning;
+
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.
@@ -17,11 +21,19 @@ import javax.persistence.*;
 })
 public class Word {
     @Id
-    @Column(name = "word_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
+
     @Column(name = "word")
     private String value;
+
+    @OneToMany(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "word_id", nullable = true)
+    private Set<Meaning> meanings = new HashSet<Meaning>();
+
+    @OneToMany(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "word_id", nullable = true)
+    private Set<Synonym> synonyms = new HashSet<Synonym>();
 
     public Word() {
 
@@ -40,7 +52,7 @@ public class Word {
     }
 
     public String toString() {
-        return value;
+        return "word " + value + System.lineSeparator()+ "synonyms: " + synonyms.toString() + System.lineSeparator() + "meaning: " + meanings.toString() + System.lineSeparator()  ;
     }
 
     public int hashCode() {
@@ -55,5 +67,27 @@ public class Word {
         return value.equals(other.value);
     }
 
+    public int getId() {
+        return id;
+    }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public Set<Meaning> getMeanings() {
+        return meanings;
+    }
+
+    public void setMeanings(Set<Meaning> meanings) {
+        this.meanings = meanings;
+    }
+
+    public Set<Synonym> getSynonyms() {
+        return synonyms;
+    }
+
+    public void setSynonyms(Set<Synonym> synonyms) {
+        this.synonyms = synonyms;
+    }
 }

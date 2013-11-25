@@ -23,13 +23,13 @@
         <property name="jpaProperties">
             <props>
                 <prop key="hibernate.dialect">
-                    org.hibernate.dialect.MySQLMyISAMDialect
+                    org.hibernate.dialect.MySQLDialect
                 </prop>
-                <!--prop key="hibernate.hbm2ddl.auto">
+                <prop key="hibernate.hbm2ddl.auto">
                     create
-                </prop-->
+                </prop>
                 <prop key="hibernate.show_sql">
-                    false
+                    true
                 </prop>
             </props>
         </property>
